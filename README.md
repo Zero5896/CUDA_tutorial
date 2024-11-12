@@ -1,8 +1,12 @@
-# Setting Up CUDA, cuDNN, and TensorRT on Linux
+# 🚀 Setting Up CUDA, cuDNN, and TensorRT on Linux
 
-This guide will walk you through installing CUDA, cuDNN, and TensorRT on Linux to enable GPU acceleration for TensorFlow. Each step includes explanations and paths to help you understand why these commands are used.
+Welcome to the ultimate Markdown guide for installing CUDA, cuDNN, and TensorRT on Linux! 🚀 This tutorial is designed to get your machine ready for GPU-accelerated TensorFlow and other deep learning frameworks. I've included all the commands, paths, and explanations you need to get up and running like a pro.
 
----
+This guide is heavily inspired by [this fantastic YouTube video](https://www.youtube.com/watch?v=1Tr1ifuSh6o&t=858s). Seriously, go check it out — it’s packed with insights and even has a GitHub repo for extra support. But if you’re more of a Markdown fan and want a no-fuss, easy-to-follow walkthrough, you’re in the right place. Let’s dive in! 💻🔥
+
+--- 
+
+
 
 ## Phase 1: System Preparation
 
@@ -38,34 +42,33 @@ bash ./Miniconda3-latest-Linux-x86_64.sh
 
 ## Phase 3: Installing CUDA
 
-**Explanation**: CUDA is the framework that allows TensorFlow to use your GPU for computations.
+**Explanation**: CUDA is the framework that allows TensorFlow to use your GPU for computations. It is very important to know your GPUs model so you can get the proper CUDA version, for example my GPU is a GeForce 960 Strix so the best CUDA version is 11.8, for more information check this site: https://developer.nvidia.com/cuda-gpus
 
 **Commands**:
 
 1. Download CUDA installer: 
-```bash
-wget https://developer.download.nvidia.com/compute/cuda/12.1.1/local_installers/cuda_12.1.1_530.30.02_linux.run
-```
+https://developer.nvidia.com/cuda-toolkit-archive
 
-2. Run the installer with 
-```bash
-sudo sh cuda_12.1.1_530.30.02_linux.run
-```
+2. Run the installer:
+
+### (Important: If you have a Nvidia drivers already installed in your machine please uncheck the driver box) 
 ### Set Up Environment Variables for CUDA
 
 1. Open `.bashrc`
 ```bash
- with nano ~/.bashrc
+nano ~/.bashrc
 ```
 2. Add the following lines:
 
 ```bash
-export PATH=/usr/local/cuda-12.1/bin${PATH:+:${PATH}}
-export LD_LIBRARY_PATH=/usr/local/cuda-12.1/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+export PATH=/usr/local/cuda-11.8/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/usr/local/cuda-11.8/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 ```
 
-3. Save and close, then update the environment with `source ~/.bashrc`.
-
+3. Save and close, then update the environment with
+```bash
+ source ~/.bashrc
+```
 
 
 **Explanation**: These paths tell the system where to find CUDA binaries and libraries.
@@ -143,8 +146,8 @@ sudo mv TensorRT-8.6.1 /usr/local/TensorRT-8.6.1
 ```
 2. Add these paths:
 ```bash
-export PATH=/usr/local/cuda-12.1/bin:/usr/local/TensorRT-8.6.1/bin:$PATH
-export LD_LIBRARY_PATH=/usr/local/cuda-12.1/lib64:/usr/local/TensorRT-8.6.1/lib:$LD_LIBRARY_PATH
+export PATH=/usr/local/cuda-11.8/bin:/usr/local/TensorRT-8.6.1/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda-11.8/lib64:/usr/local/TensorRT-8.6.1/lib:$LD_LIBRARY_PATH
 ```
 3. Save and reload `.bashrc` with 
 ```bash
@@ -156,14 +159,14 @@ source ~/.bashrc
 1. Run `sudo ldconfig` to update library configurations.
 2. Remove the old cuDNN library link (replace `x.x` with the correct version):
 ```bash
-sudo rm /usr/local/cuda-12.1/targets/x86_64-linux/lib/libcudnn*.so.8
+sudo rm /usr/local/cuda-11.8/targets/x86_64-linux/lib/libcudnn*.so.8
 ```
 
 
 3. Create a new symbolic link for cuDNN:
 
 ```bash
-sudo ln -s /usr/local/cuda-12.1/targets/x86_64-linux/lib/libcudnn_adv_infer.so.8.x.x /usr/local/cuda-12.1/targets/x86_64-linux/lib/libcudnn_adv_infer.so.8
+sudo ln -s /usr/local/cuda-11.8/targets/x86_64-linux/lib/libcudnn_adv_infer.so.8.x.x /usr/local/cuda-12.1/targets/x86_64-linux/lib/libcudnn_adv_infer.so.8
 ```
 ---
 
@@ -173,11 +176,11 @@ sudo ln -s /usr/local/cuda-12.1/targets/x86_64-linux/lib/libcudnn_adv_infer.so.8
 
 1. Create a new environment with Python 3.9: `
 ```bash
-conda create --name tf python=3.9
+conda create --name GPU python=3.9
 ```
 2. Activate the environment: 
 ```bash
-conda activate tf
+conda activate GPU
 ```
 
 ### Install TensorFlow with CUDA Support
@@ -188,7 +191,7 @@ pip install tensorflow[and-cuda]
 ```
 2. Verify TensorFlow detects the GPU:
 ```python
-python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"`
+python -c "import tensorflow as tf; print(tf.test.gpu_device_name())"
 ```
 ---
 
@@ -207,22 +210,9 @@ pip install tensorrt_lean-8.6.1-cp39-none-linux_x86_64.whl
 ```
 ---
 
-## Phase 8: Installing JupyterLab for Notebooks
-
-1. Install JupyterLab: 
-```bash
-pip install jupyterlab
-```
-2. Launch JupyterLab: 
-```bash
-jupyter lab
-```
-
-**Note**: Running JupyterLab from the environment lets you manage your TensorFlow workflows interactively.
-
 ---
 
-## Phase 9: Verifying GPU and CUDA Compatibility
+## Phase 8: Verifying GPU and CUDA Compatibility
 
 1. Run `nvidia-smi` to check GPU usage and confirm compatibility.
 
